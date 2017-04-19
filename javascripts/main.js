@@ -10,6 +10,12 @@
 
 ///FAT ARRROW ... changing the way functions look ... 
 
+/// new functions = 
+// const let nameOftheFunction () => {
+	//let= "blah"
+	//const = thisThingIsStagnant
+// }
+
 
 $(document).ready(function(){
 	const outputContainer = $("#output");
@@ -59,39 +65,27 @@ $(document).ready(function(){
 
 
 
-	const loadDogs = function(){
-		return new Promise(function(resolve,reject){
+	const loadDogs = () => {
+		return new Promise((resolve,reject) => {
 			$.ajax("./database/dogs.json")
-			.done(function(data2){
-				resolve(data2.dogs);
-			})
-			.fail(function(error){
-				reject(error);
-			});
+			.done((data2) => resolve(data2.dogs))
+			.fail((error) => reject(error));
 		});
 	};	
 
-	const loadCats = function(){
-		return new Promise(function(resolve,reject){
+	const loadCats = () => {
+		return new Promise((resolve,reject) => {
 			$.ajax("./database/cats.json")
-			.done(function(data3){
-			resolve(data3.cats);
-			})
-			.fail(function(error){
-			reject(error);
-			});
+			.done((data3)=> resolve(data3.cats))
+			.fail((error) => reject(error));
 		});
 	};
 
-	const loadDinos = function(){
-		return new Promise(function(resolve,reject){
+	const loadDinos = () => {
+		return new Promise((resolve,reject) =>{
 			$.ajax("./database/dinos.json")
-			.done(function(data4){
-			resolve(data4.dinos);
-			})
-			.fail(function(error){
-			reject(error);
-			});
+			.done((data4) => resolve(data4.dinos))
+			.fail((error) => reject(error));
 		});
 	};
 
@@ -113,7 +107,7 @@ $(document).ready(function(){
 
 	};	
 /// checking for kids=true matches the pets kid friendly = true as well. 
-	const checkForKidFriendly = function(human, pet){
+	const checkForKidFriendly = (human, pet) => {
 		const hasKids = human["has-kids"]; // checking the "key in humans" true/false
 		const isKidFriendly = pet["kid-friendly"];
 		let isMatched = true;
@@ -127,20 +121,20 @@ $(document).ready(function(){
 
 
 	//////// hu
-	loadHumans().then(function(humans){
+	loadHumans().then((humans) => {
 		// "human is a place holder, needs to match up the function argument with what will be pushed."
-		humans.forEach(function(human){
+		humans.forEach((human) => {
 		//creating a place holder for the matches of humans wiht animals
 		human.matches = [];
 		myHumans.push(human);			
 		});
 
 			Promise.all([loadCats(), loadDinos(), loadDogs()])
-			.then(function(result){
+			.then((result) => {
 			// console.log(result);
-				result.forEach(function(xhrResult){
+				result.forEach((xhrResult) => {
 					//nesting two for each arraay of the 3 resulst and the array of each json, to we need to into the first array ant then through each animal array. 
-					xhrResult.forEach(function(animal){
+					xhrResult.forEach((animal) => {
 						myAnimals.push(animal);
 					});
 					///// result is the array that holds the results for the for each loop 
@@ -157,11 +151,11 @@ $(document).ready(function(){
 					// console.log(myHumans);
 					writeToDOM(myHumans);//WRITE TO DOM CALLED AFTER PROMISE arrays have been pulled and sorted into the arrays 
 				})
-				.catch(function(errors){
+				.catch((errors) => {
 					console.log(errors);
 				});
 			})
-			.catch(function(humanError){
+			.catch((humanError) => {
 				console.log(humanError);
 			});	
 
