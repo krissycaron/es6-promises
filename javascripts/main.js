@@ -2,19 +2,28 @@
 // Iterate over all JSON files and match the human with their appropriate pet(s)
 // ES6-ify it all!
 
-$(document).ready(function(){
-	var outputContainer = $("#output");
+// var is done away with .. (let and const) 
+// let = variables that are changed later on in your code ... 
+// const =  something that isnt going to change in your code.... 
+// always as "am i going to change the value of this later on?"
 
-	var writeToDOM = function (humanArray) {
-	  var domString = "";
-	  for (var i = 0; i < humanArray.length; i++) {
+
+///FAT ARRROW ... changing the way functions look ... 
+
+
+$(document).ready(function(){
+	const outputContainer = $("#output");
+
+	const writeToDOM = function (humanArray) {
+	  let domString = "";
+	  for (let i = 0; i < humanArray.length; i++) {
 	    domString += `<div class="human row">`;
 	    domString += `<div class="col-sm-4">`;
 	    domString += `<img src="${humanArray[i].image}">`;
 	    domString += `<p>${humanArray[i].name}</p>`;
 	    domString += `</div>`;
 	    domString += `<div class="col-sm-8 overflow-row">`;
-	    for (var j = 0; j < humanArray[i].matches.length; j++){
+	    for (let j = 0; j < humanArray[i].matches.length; j++){
 	      domString += `<div class="animal">`;
 	      domString += `<img src="${humanArray[i].matches[j].image}">`;
 	      domString += `<p>${humanArray[i].matches[j].name}</p>`;
@@ -27,19 +36,30 @@ $(document).ready(function(){
 	  outputContainer.append(domString);
 	};
 
-	var loadHumans = function(){
-		return new Promise(function(resolve,reject){
+	// const loadHumans = function(){
+	// 	return new Promise(function(resolve,reject){
+	// 		$.ajax("./database/humans.json")
+	// 		.done(function(data1){
+	// 			resolve(data1.humans);
+	// 		})
+	// 		.fail(function(error){
+	// 			reject(error);
+	// 		});
+	// 	});
+	// };
+
+	const loadHumans = () => {
+		return new Promise((resolve,reject) => {
 			$.ajax("./database/humans.json")
-			.done(function(data1){
-				resolve(data1.humans);
-			})
-			.fail(function(error){
-				reject(error);
-			});
+			.done((data1) => resolve(data1.humans))
+			.fail((error) => reject(error));
+			// .fail((error) => {reject(error)}) //can leave in the curly brackets if you want... looks uglier ... but you can .  
 		});
 	};
 
-	var loadDogs = function(){
+
+
+	const loadDogs = function(){
 		return new Promise(function(resolve,reject){
 			$.ajax("./database/dogs.json")
 			.done(function(data2){
@@ -51,7 +71,7 @@ $(document).ready(function(){
 		});
 	};	
 
-	var loadCats = function(){
+	const loadCats = function(){
 		return new Promise(function(resolve,reject){
 			$.ajax("./database/cats.json")
 			.done(function(data3){
@@ -63,7 +83,7 @@ $(document).ready(function(){
 		});
 	};
 
-	var loadDinos = function(){
+	const loadDinos = function(){
 		return new Promise(function(resolve,reject){
 			$.ajax("./database/dinos.json")
 			.done(function(data4){
@@ -75,15 +95,15 @@ $(document).ready(function(){
 		});
 	};
 
-
-	var myHumans = [];
-	var myAnimals = [];
+	// items in side an array can be set as either. the things inside the array can but the array holder will not change.. 
+	let myHumans = [];
+	let myAnimals = [];
 	//checking for two arguments, one human and one pet (human, pet)
 	// this function is checking for the type of true false that the human wants for a pet
-	var checkForTypeMatch = function(human, pet){
+	const checkForTypeMatch = function(human, pet){
 		// this is an array we need to loop feeding a single pet and a single human
-		var interestedInArray = human["interested-in"];
-		var isMatchNumber = interestedInArray.indexOf(pet.type);
+		const interestedInArray = human["interested-in"];
+		const isMatchNumber = interestedInArray.indexOf(pet.type);
 		if (isMatchNumber === -1){
 			return false;
 		} else {
@@ -93,10 +113,10 @@ $(document).ready(function(){
 
 	};	
 /// checking for kids=true matches the pets kid friendly = true as well. 
-	var checkForKidFriendly = function(human, pet){
-		var hasKids = human["has-kids"]; // checking the "key in humans" true/false
-		var isKidFriendly = pet["kid-friendly"];
-		var isMatched = true;
+	const checkForKidFriendly = function(human, pet){
+		const hasKids = human["has-kids"]; // checking the "key in humans" true/false
+		const isKidFriendly = pet["kid-friendly"];
+		let isMatched = true;
 		// if human has kids and the pet (matchign the argument) and the pet is kid frienly ! is and opposite( not kid friendly)
 		if (hasKids && !isKidFriendly){
 			isMatched = false;
@@ -126,8 +146,8 @@ $(document).ready(function(){
 					///// result is the array that holds the results for the for each loop 
 				});
 
-				for(var i=0; i<myHumans.length; i++){
-					for (var k=0; k < myAnimals.length; k++){
+				for(let i=0; i<myHumans.length; i++){
+					for (let k=0; k < myAnimals.length; k++){
 						if (checkForTypeMatch(myHumans[i], myAnimals[k]) && checkForKidFriendly(myHumans[i], myAnimals[k])){
 							myHumans[i].matches.push(myAnimals[k]);
 						}
@@ -135,7 +155,7 @@ $(document).ready(function(){
 					}
 				}
 					// console.log(myHumans);
-					writeToDOM(myHumans);
+					writeToDOM(myHumans);//WRITE TO DOM CALLED AFTER PROMISE arrays have been pulled and sorted into the arrays 
 				})
 				.catch(function(errors){
 					console.log(errors);
